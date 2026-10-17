@@ -9,7 +9,7 @@
         <p class="mt-2 text-ink2">Hier laufen bald alle Lizenzen, Abos und HomeKit-Codes zusammen.</p>
         <div class="mt-5 flex flex-wrap gap-2">
             <span class="pill {{ $dbOk ? 'pill-ok' : 'pill-er' }}"><span class="size-1.5 rounded-full bg-current"></span>{{ $dbOk ? 'Datenbank verbunden' : 'Datenbank nicht erreichbar' }}</span>
-            <span class="pill pill-ac">Version 0.1.0</span>
+            <span class="pill pill-ac">Version {{ config('licensevault.version') }}</span>
         </div>
     </div>
 </section>

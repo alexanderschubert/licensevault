@@ -36,7 +36,7 @@ class AuthTest extends TestCase
         $this->admin();
         $this->post('/login', ['email' => 'admin@example.test', 'password' => self::PW])->assertRedirect('/');
         $this->assertAuthenticated();
-        $this->get('/')->assertOk()->assertSee('Willkommen zurück');
+        $this->get('/')->assertOk()->assertSee('Willkommen zurück')->assertSee('Version '.config('licensevault.version'))->assertDontSee('Version 0.1.0');
     }
 
     public function test_invalid_credentials_are_rejected_generically(): void
