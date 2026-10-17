@@ -8,7 +8,7 @@ Das **All-in-One-Image** (`--target aio`) bringt alles in einem Container mit: W
 
 ```bash
 cd /mnt/user/appdata/licensevault
-docker build --target aio -t licensevault:0.6.0 .
+docker build --target aio -t licensevault:0.6.1 .
 ```
 
 (Das Image läuft als `nobody:users` = UID 99 / GID 100, passend zu Unraid.)
@@ -43,6 +43,10 @@ wget -O /boot/config/plugins/dockerMan/templates-user/my-licensevault.xml https:
    - **Backup-Passphrase:** mind. 12 Zeichen; aktiviert die täglichen verschlüsselten Sicherungen.
 4. **Apply**. Nach dem Start öffnet der Knopf **WebUI** die Oberfläche; anmelden mit der gewählten E-Mail.
 5. **Danach `ADMIN_PASSWORD` aus dem Container entfernen** (Container bearbeiten → Variable löschen → Apply). Es wird nur beim allerersten Start gebraucht.
+
+### Updates aus GitHub
+
+Jeder Release-Tag (`vX.Y.Z`) veröffentlicht das Image als `ghcr.io/alexanderschubert/licensevault:<version>` **und** als `:latest`. Im Template steht die feste Version (reproduzierbar); zum Aktualisieren im Container unter *Repository* die neue Version eintragen und **Apply** drücken. Wer lieber automatische Update-Hinweise in Unraid möchte, trägt `ghcr.io/alexanderschubert/licensevault:latest` ein – dann zeigt Unraid bei neuen Releases „Update verfügbar“. Datenbank-Updates laufen beim Start automatisch (mit Sicherung davor, wenn eine Backup-Passphrase gesetzt ist).
 
 ## 3. Wichtig: Schlüssel sichern
 

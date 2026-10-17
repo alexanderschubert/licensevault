@@ -1,7 +1,7 @@
 <?php
 
 return [
-    'version' => '0.6.0',
+    'version' => '0.6.1',
 
     // Vorlaufzeiten (Tage vor Ablauf/Verlängerung), kommagetrennt, z. B. "30,7,1"
     'reminder_days' => array_values(array_unique(array_filter(
