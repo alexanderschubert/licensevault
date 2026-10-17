@@ -18,7 +18,7 @@ docker build --target aio -t licensevault:0.6.0 .
 ## 2. Template installieren
 
 1. Die passende Datei nach `/boot/config/plugins/dockerMan/templates-user/` kopieren:
-   - `unraid/licensevault-lokal.xml` (Variante A) oder `unraid/licensevault.xml` (Variante B; darin vorher `OWNER` durch deinen GitHub-Benutzer ersetzen).
+   - `unraid/licensevault-lokal.xml` (Variante A) oder `unraid/licensevault.xml` (Variante B, Image `ghcr.io/alexanderschubert/licensevault`; bei einem **privaten** Repo vorher auf dem Unraid `docker login ghcr.io` mit einem Token mit `read:packages` ausführen).
 
    ```bash
    cp /mnt/user/appdata/licensevault/unraid/licensevault-lokal.xml /boot/config/plugins/dockerMan/templates-user/my-licensevault.xml

@@ -8,13 +8,13 @@
   <MyIP/>
   <Shell>sh</Shell>
   <Privileged>false</Privileged>
-  <Support>https://github.com/OWNER/licensevault/issues</Support>
-  <Project>https://github.com/OWNER/licensevault</Project>
+  <Support>https://github.com/alexanderschubert/licensevault/issues</Support>
+  <Project>https://github.com/alexanderschubert/licensevault</Project>
   <Overview>Private, selbst gehostete Verwaltung von Software-Lizenzen, Konto-Zugängen, Dokumenten sowie HomeKit- und Matter-QR-Codes. EIN Container (Web-Oberfläche, Scheduler und PostgreSQL eingebettet), ein Volume. Verschlüsselte Schlüssel, tägliche verschlüsselte Backups, Erinnerungen per Web-Push (iPhone-App) und Gotify.</Overview>
   <Category>Tools: Productivity:</Category>
   <WebUI>http://[IP]:[PORT:8080]/</WebUI>
   <TemplateURL/>
-  <Icon>https://raw.githubusercontent.com/OWNER/licensevault/main/public/icons/icon-192-v3.png</Icon>
+  <Icon>https://raw.githubusercontent.com/alexanderschubert/licensevault/main/public/icons/icon-192-v3.png</Icon>
   <ExtraParams>--stop-timeout 90</ExtraParams>
   <PostArgs/>
   <CPUset/>
