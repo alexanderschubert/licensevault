@@ -68,7 +68,7 @@ In der `.env` von LicenseVault:
 APP_URL=https://deine-domain
 SESSION_SECURE_COOKIE=true
 # optional: nur den Proxy vertrauen, z. B. die IP von Nginx Proxy Manager
-# TRUSTED_PROXIES=192.168.40.5
+# TRUSTED_PROXIES=192.168.1.5
 ```
 
 Danach `docker compose … up -d --build` (bzw. `--force-recreate`). Ab dieser Version vertraut LicenseVault den `X-Forwarded-*`-Headern privater Netze und erzeugt hinter dem Proxy `https://`-Links; ohne das lädt die Seite ohne Design, weil der Browser `http://`-Skripte und -Styles auf einer HTTPS-Seite blockiert.

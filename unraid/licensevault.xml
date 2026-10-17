@@ -13,7 +13,7 @@
   <Overview>Private, selbst gehostete Verwaltung von Software-Lizenzen, Konto-Zugängen, Dokumenten sowie HomeKit- und Matter-QR-Codes. EIN Container (Web-Oberfläche, Scheduler und PostgreSQL eingebettet), ein Volume. Verschlüsselte Schlüssel, tägliche verschlüsselte Backups, Erinnerungen per Web-Push (iPhone-App) und Gotify.</Overview>
   <Category>Tools: Productivity:</Category>
   <WebUI>http://[IP]:[PORT:8080]/</WebUI>
-  <TemplateURL/>
+  <TemplateURL>https://raw.githubusercontent.com/alexanderschubert/licensevault/main/unraid/licensevault.xml</TemplateURL>
   <Icon>https://raw.githubusercontent.com/alexanderschubert/licensevault/main/public/icons/icon-192-v3.png</Icon>
   <ExtraParams>--stop-timeout 90</ExtraParams>
   <PostArgs/>
