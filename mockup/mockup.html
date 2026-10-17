@@ -1,0 +1,340 @@
+<!doctype html>
+<html lang="de"><head><meta charset="utf-8"><title>LicenseVault Mockup</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","Inter",Helvetica,Arial,sans-serif;background:#e9eaf0;width:3120px;padding:60px;color:#111}
+.board-h{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:36px}
+.board-h h1{font-size:44px;letter-spacing:-.02em;font-weight:700;color:#14142b}
+.board-h p{font-size:20px;color:#5b5d75;margin-top:6px}
+.tag{font-size:15px;font-weight:600;color:#5b5bd6;background:#e3e3fb;padding:8px 16px;border-radius:99px}
+.grid{display:grid;grid-template-columns:1440px 1440px;gap:60px 60px}
+.lab{font-size:18px;font-weight:600;color:#5b5d75;margin-bottom:12px;letter-spacing:.04em;text-transform:uppercase}
+.lab b{color:#5b5bd6}
+
+/* ---- themes ---- */
+.app{--bg:#f5f6fa;--panel:#fff;--panel2:#f0f1f7;--line:#e4e6ef;--tx:#14152b;--tx2:#5d6078;--tx3:#8d90a8;--ac:#5b5bd6;--acs:#ececfc;--ac-tx:#fff;
+--ok:#12805c;--oks:#dcf5ea;--wa:#a55b00;--was:#fdeccf;--er:#c42b3a;--ers:#fde1e4;--sh:0 1px 2px rgba(20,21,43,.05),0 8px 24px rgba(20,21,43,.05);--side:#fff;--qrbg:#fff;--qrfg:#14152b}
+.app.dark{--bg:#0d0e17;--panel:#161826;--panel2:#1d2033;--line:#262a40;--tx:#eceef9;--tx2:#a0a4c0;--tx3:#6c7090;--ac:#8c8df7;--acs:#26284d;--ac-tx:#0d0e17;
+--ok:#4fd6a0;--oks:#12332a;--wa:#f3b45a;--was:#3a2b10;--er:#ff7b88;--ers:#40191f;--sh:0 1px 2px rgba(0,0,0,.4),0 8px 24px rgba(0,0,0,.3);--side:#11121d;--qrbg:#f4f5fb;--qrfg:#0d0e17}
+.app{width:1440px;height:900px;background:var(--bg);color:var(--tx);display:flex;border-radius:18px;overflow:hidden;box-shadow:0 20px 60px rgba(20,21,43,.22);font-size:14px;position:relative}
+svg{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;flex:none}
+/* sidebar */
+.side{width:240px;background:var(--side);border-right:1px solid var(--line);padding:22px 14px;display:flex;flex-direction:column;gap:4px}
+.logo{display:flex;align-items:center;gap:10px;padding:2px 10px 22px;font-weight:700;font-size:18px;letter-spacing:-.01em}
+.logo i{width:34px;height:34px;border-radius:10px;background:linear-gradient(135deg,var(--ac),#9a6bf0);display:grid;place-items:center;color:#fff}
+.logo i svg{width:20px;height:20px}
+.sec{font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--tx3);padding:14px 12px 6px}
+.nav{display:flex;align-items:center;gap:12px;padding:10px 12px;border-radius:10px;color:var(--tx2);font-weight:500}
+.nav.on{background:var(--acs);color:var(--ac);font-weight:600}
+.nav .n{margin-left:auto;font-size:12px;background:var(--panel2);color:var(--tx2);padding:1px 8px;border-radius:99px}
+.nav .n.w{background:var(--was);color:var(--wa)}
+.sp{flex:1}
+.dbcard{background:var(--panel2);border-radius:12px;padding:12px 14px;font-size:12px;color:var(--tx2);display:grid;gap:7px}
+.dbcard div{display:flex;align-items:center;gap:8px}
+.dot{width:8px;height:8px;border-radius:50%;background:var(--ok);box-shadow:0 0 0 3px var(--oks)}
+.user{display:flex;align-items:center;gap:10px;padding:12px 8px 0;margin-top:8px}
+.av{width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,#f0a35e,#e0567a);color:#fff;display:grid;place-items:center;font-weight:700;font-size:13px}
+.user small{display:block;color:var(--tx3);font-size:11.5px}
+/* main */
+.main{flex:1;display:flex;flex-direction:column;min-width:0}
+.top{height:68px;border-bottom:1px solid var(--line);display:flex;align-items:center;padding:0 32px;gap:14px;background:var(--panel)}
+.search{display:flex;align-items:center;gap:10px;background:var(--panel2);border-radius:10px;padding:10px 14px;width:400px;color:var(--tx3)}
+.search kbd{margin-left:auto;font:inherit;font-size:11.5px;border:1px solid var(--line);border-radius:5px;padding:1px 6px;background:var(--panel)}
+.ibtn{width:40px;height:40px;border-radius:10px;border:1px solid var(--line);display:grid;place-items:center;color:var(--tx2);background:var(--panel);position:relative}
+.ibtn .b{position:absolute;top:8px;right:9px;width:8px;height:8px;border-radius:50%;background:var(--er);border:2px solid var(--panel)}
+.btn{display:inline-flex;align-items:center;gap:8px;background:var(--ac);color:var(--ac-tx);font-weight:600;padding:10px 16px;border-radius:10px;font-size:14px}
+.btn.g{background:var(--panel);color:var(--tx);border:1px solid var(--line)}
+.content{padding:22px 32px;overflow:hidden;flex:1;display:flex;flex-direction:column;gap:20px}
+.ph{display:flex;justify-content:space-between;align-items:flex-end}
+.ph h2{font-size:26px;letter-spacing:-.02em}
+.ph p{color:var(--tx2);margin-top:4px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:16px;box-shadow:var(--sh)}
+.cp{padding:20px 22px}
+.card h3{font-size:15px;font-weight:600;display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+.card h3 a{font-size:12.5px;color:var(--ac);font-weight:500}
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+.kpi{padding:18px 20px}
+.kpi .ic{width:36px;height:36px;border-radius:10px;display:grid;place-items:center;background:var(--acs);color:var(--ac)}
+.kpi .ic.w{background:var(--was);color:var(--wa)}.kpi .ic.o{background:var(--oks);color:var(--ok)}
+.kpi .t{display:flex;justify-content:space-between;align-items:center;color:var(--tx2);font-weight:500}
+.kpi .v{font-size:32px;font-weight:700;letter-spacing:-.03em;margin:8px 0 2px}
+.kpi .s{font-size:12.5px;color:var(--tx3)}
+.kpi .s b{color:var(--ok);font-weight:600}
+.row2{display:grid;grid-template-columns:1.5fr 1fr;gap:16px}
+.row3{display:grid;grid-template-columns:1.5fr 1fr;gap:16px;flex:1;min-height:0}
+/* bars */
+.bars{display:flex;align-items:flex-end;gap:14px;height:115px;padding-top:6px}
+.bars div{flex:1;display:flex;flex-direction:column;align-items:center;gap:8px;height:100%;justify-content:flex-end;font-size:11.5px;color:var(--tx3)}
+.bars span{width:100%;border-radius:7px 7px 3px 3px;background:var(--acs);display:block}
+.bars div.hl span{background:var(--ac)}
+.legend{display:flex;gap:18px;font-size:12.5px;color:var(--tx2);margin-bottom:6px}
+/* lists */
+.exp{display:flex;align-items:center;gap:12px;padding:10px 0;border-top:1px solid var(--line)}
+.exp:first-of-type{border-top:0}
+.lg{width:36px;height:36px;border-radius:10px;display:grid;place-items:center;color:#fff;font-weight:700;font-size:14px;flex:none}
+.exp p{font-weight:600}.exp small{color:var(--tx3);font-size:12px;display:block}
+.exp .r{margin-left:auto;text-align:right}
+.pill{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:600;padding:3px 10px;border-radius:99px;background:var(--panel2);color:var(--tx2)}
+.pill.ok{background:var(--oks);color:var(--ok)}.pill.wa{background:var(--was);color:var(--wa)}.pill.er{background:var(--ers);color:var(--er)}.pill.ac{background:var(--acs);color:var(--ac)}
+/* table */
+table{width:100%;border-collapse:collapse}
+th{white-space:nowrap;text-align:left;font-size:11.5px;text-transform:uppercase;letter-spacing:.06em;color:var(--tx3);font-weight:600;padding:12px;border-bottom:1px solid var(--line);background:var(--panel2)}
+td{white-space:nowrap;padding:10px 12px;border-bottom:1px solid var(--line);vertical-align:middle}
+tr:last-child td{border-bottom:0}
+tr.sel td{background:var(--acs)}
+td .nm{display:flex;align-items:center;gap:12px}
+td .nm p{font-weight:600}td .nm small{color:var(--tx3);font-size:12px;display:block}
+.key{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12.5px;color:var(--tx2);display:inline-flex;align-items:center;gap:8px;background:var(--panel2);padding:4px 10px;border-radius:7px}
+.key svg{width:14px;height:14px;color:var(--tx3)}
+.meter{width:70px;height:6px;border-radius:9px;background:var(--panel2);overflow:hidden;display:inline-block;vertical-align:middle;margin-right:8px}
+.meter i{display:block;height:100%;background:var(--ac)}
+.chips{display:flex;gap:8px}
+.chip{padding:7px 14px;border-radius:99px;border:1px solid var(--line);background:var(--panel);color:var(--tx2);font-weight:500;font-size:13px}
+.chip.on{background:var(--ac);color:var(--ac-tx);border-color:var(--ac)}
+.split{display:grid;grid-template-columns:1fr 310px;gap:16px;flex:1;min-height:0}
+.drawer{padding:22px;display:flex;flex-direction:column;gap:14px;overflow:hidden}
+.drawer .hd{display:flex;gap:14px;align-items:center}
+.drawer .hd .lg{width:48px;height:48px;font-size:19px;border-radius:13px}
+.drawer h4{font-size:18px}
+.dl{display:grid;grid-template-columns:110px 1fr;gap:10px 8px;font-size:13px}
+.dl dt{color:var(--tx3)}.dl dd{font-weight:500}
+.secret{background:var(--panel2);border-radius:12px;padding:12px 14px}
+.secret small{color:var(--tx3);font-size:11.5px;display:flex;align-items:center;gap:6px;margin-bottom:6px}
+.secret code{font-family:ui-monospace,Menlo,monospace;font-size:14px;letter-spacing:.04em}
+.secret .a{display:flex;gap:8px;margin-top:10px}
+.secret .a span{font-size:12px;border:1px solid var(--line);background:var(--panel);padding:5px 10px;border-radius:8px;display:flex;gap:6px;align-items:center;font-weight:500}
+.tags{display:flex;gap:6px;flex-wrap:wrap}
+/* homekit */
+.notice{display:flex;align-items:center;gap:12px;background:var(--acs);color:var(--ac);padding:11px 16px;border-radius:12px;font-weight:500;font-size:13px}
+.gal{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+.dev{padding:14px 16px;display:flex;flex-direction:column;gap:10px}
+.qr{background:var(--qrbg);border-radius:12px;padding:10px;width:150px;margin:0 auto;aspect-ratio:1/1;display:grid;place-items:center;border:1px solid var(--line);position:relative;overflow:hidden}
+.qr>svg{width:100%;height:100%;stroke:none;fill:var(--qrfg)}
+.qr.lock>svg{filter:blur(3.5px);opacity:.8}
+.qr .lk svg{width:20px;height:20px;fill:none;stroke:#14152b}.qr.lock .lk{position:absolute;display:flex;flex-direction:column;align-items:center;gap:6px;color:#14152b;font-weight:600;font-size:12.5px;background:rgba(255,255,255,.88);padding:12px 16px;border-radius:12px}
+.dev .t{display:flex;justify-content:space-between;align-items:flex-start}
+.dev .t p{font-weight:600;font-size:15px}.dev .t small{color:var(--tx3);font-size:12px}
+.dev .f{display:flex;justify-content:space-between;align-items:center;font-size:12px;color:var(--tx3)}
+.dev .code{font-family:ui-monospace,Menlo,monospace;letter-spacing:.1em;font-size:13px;color:var(--tx2)}
+/* docker board */
+.dock{background:#14152b;color:#eceef9;border-radius:22px;padding:44px 52px;margin-top:60px;display:grid;grid-template-columns:1.25fr 1fr;gap:48px}
+.dock h2{font-size:30px;letter-spacing:-.02em;margin-bottom:6px}
+.dock .sub{color:#a0a4c0;font-size:16px;margin-bottom:26px}
+.arch{display:grid;gap:10px;font-size:15px}
+.arch .lay{display:flex;gap:12px;align-items:stretch}
+.box{flex:1;border:1px solid #33375a;background:#1c1e36;border-radius:14px;padding:14px 16px}
+.box b{display:block;font-size:15px}.box small{color:#a0a4c0;font-size:12.5px;display:block;margin-top:3px;font-family:ui-monospace,Menlo,monospace}
+.box.h{border-color:#8c8df7;background:#26284d}
+.box.g{border-style:dashed}
+.arr{text-align:center;color:#6c7090;font-size:18px;line-height:1}
+.modes{display:flex;gap:12px}
+.modes .box{flex:1}
+.m{display:inline-block;font-size:11px;font-weight:700;background:#8c8df7;color:#14152b;border-radius:5px;padding:1px 7px;margin-bottom:6px}
+.dock pre{font:13.5px/1.6 ui-monospace,SFMono-Regular,Menlo,monospace;background:#0d0e17;border:1px solid #262a40;border-radius:14px;padding:18px 20px;color:#c7cae6;margin-bottom:18px;white-space:pre}
+.dock pre .k{color:#8c8df7}.dock pre .c{color:#6c7090}.dock pre .s{color:#4fd6a0}
+.dock h5{font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:#8c8df7;margin-bottom:10px}
+.sec-list{display:grid;grid-template-columns:1fr 1fr;gap:8px 18px;font-size:14px;color:#c7cae6;margin-top:6px}
+.sec-list span::before{content:"✓ ";color:#4fd6a0;font-weight:700}
+</style></head><body>
+
+<div class="board-h"><div><h1>LicenseVault — UI-Mockup</h1><p>Selbst gehostete Lizenz- &amp; HomeKit-QR-Verwaltung · Laravel · PostgreSQL · Docker Compose / Unraid · alle Daten synthetisch</p></div><span class="tag">Desktop 1440 × 900 · Light &amp; Dark</span></div>
+<div class="grid" id="grid"></div>
+<div class="dock" id="dock"></div>
+
+<script>
+const I={
+ grid:'<svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="9" rx="1.5"/><rect x="14" y="3" width="7" height="5" rx="1.5"/><rect x="14" y="12" width="7" height="9" rx="1.5"/><rect x="3" y="16" width="7" height="5" rx="1.5"/></svg>',
+ key:'<svg viewBox="0 0 24 24"><circle cx="8" cy="15" r="4"/><path d="M10.8 12.2 20 3m-4 4 3 3m-5 -1 2 2"/></svg>',
+ qr:'<svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><path d="M14 14h3v3h-3zM20 14v.01M14 20h3m3-3v4"/></svg>',
+ doc:'<svg viewBox="0 0 24 24"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M9 13h6M9 17h6"/></svg>',
+ bell:'<svg viewBox="0 0 24 24"><path d="M18 8a6 6 0 1 0-12 0c0 7-3 9-3 9h18s-3-2-3-9M10 21h4"/></svg>',
+ save:'<svg viewBox="0 0 24 24"><ellipse cx="12" cy="5" rx="8" ry="3"/><path d="M4 5v6c0 1.7 3.6 3 8 3s8-1.3 8-3V5M4 11v6c0 1.7 3.6 3 8 3s8-1.3 8-3v-6"/></svg>',
+ gear:'<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg>',
+ search:'<svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>',
+ sun:'<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M4.9 4.9l1.4 1.4m11.4 11.4 1.4 1.4M2 12h2m16 0h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>',
+ moon:'<svg viewBox="0 0 24 24"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>',
+ plus:'<svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>',
+ eur:'<svg viewBox="0 0 24 24"><path d="M18 6.5A7 7 0 1 0 18 17.5M4 10h10M4 14h10"/></svg>',
+ clock:'<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>',
+ home:'<svg viewBox="0 0 24 24"><path d="m3 11 9-8 9 8v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></svg>',
+ eye:'<svg viewBox="0 0 24 24"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg>',
+ copy:'<svg viewBox="0 0 24 24"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15H4a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v1"/></svg>',
+ lock:'<svg viewBox="0 0 24 24"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>',
+ shield:'<svg viewBox="0 0 24 24"><path d="M12 3 4 6v6c0 5 3.5 8 8 9 4.5-1 8-4 8-9V6z"/><circle cx="12" cy="11" r="2"/><path d="M12 13v3"/></svg>',
+ print:'<svg viewBox="0 0 24 24"><path d="M6 9V3h12v6M6 18H4a1 1 0 0 1-1-1v-6a1 1 0 0 1 1-1h16a1 1 0 0 1 1 1v6a1 1 0 0 1-1 1h-2"/><rect x="6" y="14" width="12" height="7"/></svg>',
+ filter:'<svg viewBox="0 0 24 24"><path d="M3 5h18l-7 8v6l-4 2v-8z"/></svg>',
+ dl:'<svg viewBox="0 0 24 24"><path d="M12 3v12m-5-5 5 5 5-5M4 21h16"/></svg>',
+};
+// pseudo-QR (synthetic, decorative – not a valid code)
+function qr(seed){let s=seed*9301+49297,r=()=>(s=(s*9301+49297)%233280)/233280,n=25,o='';
+ const fin=(x,y)=>{o+=`<rect x="${x}" y="${y}" width="7" height="7"/><rect x="${x+1}" y="${y+1}" width="5" height="5" fill="var(--qrbg)"/><rect x="${x+2}" y="${y+2}" width="3" height="3"/>`};
+ for(let y=0;y<n;y++)for(let x=0;x<n;x++){if((x<8&&y<8)||(x>n-9&&y<8)||(x<8&&y>n-9))continue;if(r()>.52)o+=`<rect x="${x}" y="${y}" width="1.02" height="1.02"/>`}
+ fin(0,0);fin(n-7,0);fin(0,n-7);
+ o+=`<rect x="${n-9}" y="${n-9}" width="5" height="5"/><rect x="${n-8}" y="${n-8}" width="3" height="3" fill="var(--qrbg)"/><rect x="${n-7}" y="${n-7}" width="1" height="1"/>`;
+ return `<svg viewBox="0 0 ${n} ${n}" shape-rendering="crispEdges">${o}</svg>`}
+
+function shell(active,title,sub,body,dark){
+ const nav=(k,ic,l,n,w)=>`<div class="nav ${active===k?'on':''}">${I[ic]}${l}${n?`<span class="n ${w?'w':''}">${n}</span>`:''}</div>`;
+ return `<div class="app ${dark?'dark':''}">
+ <aside class="side">
+  <div class="logo"><i>${I.shield}</i>LicenseVault</div>
+  <div class="sec">Übersicht</div>
+  ${nav('dash','grid','Dashboard')}
+  <div class="sec">Verwalten</div>
+  ${nav('lic','key','Lizenzen','48')}
+  ${nav('hk','qr','HomeKit-QR-Codes','23')}
+  ${nav('doc','doc','Dokumente','112')}
+  ${nav('rem','bell','Erinnerungen','5',1)}
+  <div class="sec">System</div>
+  ${nav('bak','save','Backup &amp; Export')}
+  ${nav('set','gear','Einstellungen')}
+  <div class="sp"></div>
+  <div class="dbcard"><div><span class="dot"></span><b style="color:var(--tx)">PostgreSQL 16</b> verbunden</div><div style="padding-left:16px">Backup: heute 03:00 · 48 MB</div><div style="padding-left:16px">Verschlüsselung: aktiv</div></div>
+  <div class="user"><div class="av">AS</div><div><b>Alexander</b><small>Administrator</small></div></div>
+ </aside>
+ <div class="main">
+  <header class="top">
+   <div class="search">${I.search}Lizenzen, Geräte, Tags suchen…<kbd>⌘ K</kbd></div>
+   <div style="flex:1"></div>
+   <div class="ibtn">${dark?I.moon:I.sun}</div>
+   <div class="ibtn">${I.bell}<span class="b"></span></div>
+   ${active==='hk'?`<div class="btn">${I.plus}Neues Gerät</div>`:`<div class="btn">${I.plus}Neue Lizenz</div>`}
+  </header>
+  <div class="content"><div class="ph"><div><h2>${title}</h2><p>${sub}</p></div>${body.act||''}</div>${body.html}</div>
+ </div></div>`}
+
+const logo=(c,t)=>`<div class="lg" style="background:${c}">${t}</div>`;
+
+function dashboard(d){
+ const bars=[['Jan',40],['Feb',34],['Mär',52],['Apr',38],['Mai',44],['Jun',96],['Jul',36],['Aug',42],['Sep',58],['Okt',48]];
+ const exp=(c,t,n,s,dt,p,cl)=>`<div class="exp">${logo(c,t)}<div><p>${n}</p><small>${s}</small></div><div class="r"><span class="pill ${cl}">${p}</span><small style="margin-top:4px">${dt}</small></div></div>`;
+ const rec=(c,t,n,a,w)=>`<tr><td><div class="nm">${logo(c,t)}<div><p>${n}</p><small>${a}</small></div></div></td><td>${w[0]}</td><td><span class="pill ${w[2]}">${w[1]}</span></td><td style="color:var(--tx3)">${w[3]}</td></tr>`;
+ const h=`
+ <div class="kpis">
+  <div class="card kpi"><div class="t">Aktive Lizenzen<span class="ic">${I.key}</span></div><div class="v">48</div><div class="s"><b>+3</b> in den letzten 30 Tagen</div></div>
+  <div class="card kpi"><div class="t">Kosten pro Jahr<span class="ic o">${I.eur}</span></div><div class="v">1.284 €</div><div class="s"><b>−8 %</b> gegenüber Vorjahr</div></div>
+  <div class="card kpi"><div class="t">Läuft bald ab<span class="ic w">${I.clock}</span></div><div class="v">5</div><div class="s">in den nächsten 60 Tagen</div></div>
+  <div class="card kpi"><div class="t">HomeKit-Geräte<span class="ic">${I.home}</span></div><div class="v">23</div><div class="s">in 6 Räumen · 21 online</div></div>
+ </div>
+ <div class="row2">
+  <div class="card cp"><h3>Ausgaben pro Monat <a>Details →</a></h3><div class="legend"><span>● Käufe &amp; Verlängerungen 2026</span></div>
+   <div class="bars">${bars.map(([m,v],i)=>`<div class="${m==='Jun'?'hl':''}"><span style="height:${v}%"></span>${m}</div>`).join('')}</div></div>
+  <div class="card cp"><h3>Bald fällig <a>Alle →</a></h3>
+   ${exp('#e0562f','Ad','Adobe Creative Cloud','Abo · 2 von 2 Geräten','18. Nov 2026','in 33 Tagen','er')}
+   ${exp('#2b6fe0','J','JetBrains All Products','Abo · Verlängerung','02. Dez 2026','in 47 Tagen','wa')}
+   ${exp('#1f9d6b','1P','1Password Families','Abo · 5 Nutzer','21. Dez 2026','in 66 Tagen','wa')}
+   ${exp('#7a4de0','Pa','Parallels Desktop Pro','Abo · 1 Gerät','09. Jan 2027','in 85 Tagen','ok')}
+  </div>
+ </div>
+ <div class="row3">
+  <div class="card" style="overflow:hidden"><div style="padding:18px 22px 0"><h3>Zuletzt geändert <a>Aktivitätsprotokoll →</a></h3></div>
+   <table><tbody>
+   ${rec('#2b6fe0','Sk','Sketch Mac','Bohemian B.V.',['Lizenz','Gerätelimit angepasst','ac','vor 2 Std.'])}
+   ${rec('#e0562f','Aq','Aqara Hub M2','Wohnzimmer',['HomeKit-Gerät','QR-Code hinzugefügt','ok','gestern'])}
+   ${rec('#1f9d6b','Af','Affinity Suite','Serif Ltd.',['Dokument','Rechnung angehängt','ac','gestern'])}
+   </tbody></table></div>
+  <div class="card cp"><h3>Systemstatus</h3>
+   ${[['Datenbank','PostgreSQL 16 · intern (Modus A)','ok'],['Letztes Backup','Heute, 03:00 · verschlüsselt','ok'],['Restore-Test','vor 12 Tagen erfolgreich','ok']].map(([a,b,c])=>`<div class="exp"><span class="dot" style="${c==='ac'?'background:var(--ac);box-shadow:0 0 0 3px var(--acs)':''}"></span><div><p>${a}</p><small>${b}</small></div></div>`).join('')}
+  </div>
+ </div>`;
+ return {html:h,act:`<span class="btn g">${I.dl}Export</span>`};
+}
+
+function licenses(){
+ const r=(c,t,n,v,ty,k,ex,exc,dv,pr,sel)=>`<tr class="${sel?'sel':''}"><td><div class="nm">${logo(c,t)}<div><p>${n}</p><small>${v}</small></div></div></td><td><span class="pill ${ty[1]}">${ty[0]}</span></td><td><span class="key">${I.lock}${k}</span></td><td><span class="pill ${exc}">${ex}</span></td><td>${dv}</td><td style="font-weight:600">${pr}</td></tr>`;
+ const m=(d,t)=>`<span class="meter"><i style="width:${d/t*100}%"></i></span>${d}/${t}`;
+ const h=`
+ <div class="chips"><span class="chip on">Alle · 48</span><span class="chip">Abonnement · 21</span><span class="chip">Dauerlizenz · 22</span><span class="chip">Testversion · 3</span><span class="chip">Läuft bald ab · 5</span><span style="flex:1"></span><span class="chip" style="display:flex;gap:6px;align-items:center">${I.filter}Kategorie: Alle</span><span class="chip">Tag: Alle</span></div>
+ <div class="split">
+  <div class="card" style="overflow:hidden"><table>
+   <thead><tr><th>Lizenz</th><th>Typ</th><th>Schlüssel</th><th>Läuft ab</th><th>Geräte</th><th>Preis</th></tr></thead><tbody>
+   ${r('#e0562f','Ad','Adobe Creative Cloud','Adobe · 2026',['Abo','ac'],'••••-••••-8F2A','18.11.2026','er',m(2,2),'659,88 €')}
+   ${r('#2b6fe0','J','JetBrains All Products','JetBrains · 2026.2',['Abo','ac'],'••••-••••-K91Q','02.12.2026','wa',m(3,5),'289,00 €',1)}
+   ${r('#1f9d6b','1P','1Password Families','AgileBits · 8',['Abo','ac'],'••••-••••-X7TM','21.12.2026','wa',m(5,5),'59,88 €')}
+   ${r('#7a4de0','Pa','Parallels Desktop Pro','Parallels · 20',['Abo','ac'],'••••-••••-P3LD','09.01.2027','ok',m(1,1),'119,99 €')}
+   ${r('#d9a21b','Sk','Sketch Mac','Sketch · 100',['Dauer','ok'],'••••-••••-B6WN','— unbegrenzt','',m(1,2),'99,00 €')}
+   ${r('#c43a7a','Af','Affinity Suite','Serif · 2',['Dauer','ok'],'••••-••••-C28Z','— unbegrenzt','',m(2,3),'164,99 €')}
+   ${r('#2a9fbf','Ta','Tailscale Personal','Tailscale · 1.8',['Abo','ac'],'••••-••••-QH4V','14.03.2027','ok',m(6,100),'0,00 €')}
+   ${r('#6a7089','Su','Sublime Text','Sublime HQ · 4',['Test','wa'],'••••-••••-D0RE','27.10.2026','er',m(1,1),'0,00 €')}
+   </tbody></table></div>
+  <div class="card drawer">
+   <div class="hd">${logo('#2b6fe0','J')}<div><h4>JetBrains All Products</h4><small style="color:var(--tx3)">JetBrains s.r.o. · Entwicklung</small></div></div>
+   <div class="tags"><span class="pill ac">Abonnement</span><span class="pill wa">läuft in 47 Tagen ab</span></div>
+   <div class="secret"><small>${I.lock}Lizenzschlüssel · AES-256 verschlüsselt</small><code>JB-••••-••••-••••-K91Q</code>
+    <div class="a"><span>${I.eye}Anzeigen (30 s)</span><span>${I.copy}Kopieren</span></div></div>
+   <dl class="dl"><dt>Gekauft</dt><dd>02.12.2025</dd><dt>Preis</dt><dd>289,00 € / Jahr</dd><dt>Verlängerung</dt><dd>02.12.2026</dd><dt>Geräte</dt><dd>3 von 5 genutzt</dd><dt>Kategorie</dt><dd>Entwicklung</dd></dl>
+   <div class="tags"><span class="pill">#ide</span><span class="pill">#arbeit</span><span class="pill">#jährlich</span></div>
+   <div style="border-top:1px solid var(--line);padding-top:12px;display:flex;align-items:center;gap:10px;color:var(--tx2);font-size:13px">${I.doc}Rechnung_2025-12.pdf <span style="margin-left:auto;color:var(--tx3)">184 KB</span></div>
+   <div style="display:flex;gap:8px;margin-top:auto"><span class="btn" style="flex:1;justify-content:center">Bearbeiten</span><span class="btn g">Löschen</span></div>
+  </div>
+ </div>`;
+ return {html:h,act:`<span class="btn g">${I.dl}CSV-Export</span>`};
+}
+
+function homekit(){
+ const devs=[['Aqara Hub M2','Aqara · HM2-G01','Wohnzimmer','ok','Online','482-91-306',0],['Eve Energy','Eve · 20EBO8301','Büro','ok','Online','115-48-772',0],
+ ['Nanoleaf Shapes','Nanoleaf · NL42','Wohnzimmer','ok','Online','903-27-154',1],['Philips Hue Bridge','Signify · BSB002','Flur','ok','Online','360-82-419',1],
+ ['Meross Garage','Meross · MSG100','Garage','wa','Offline','227-65-830',1],['Netatmo Thermostat','Netatmo · NTH01','Schlafzimmer','ok','Online','741-09-583',1],
+ ['Ikea Dirigera','IKEA · E2151','Küche','ok','Online','558-13-926',1],['Eufy Doorbell','Anker · T8210','Außen','ok','Online','194-70-648',1]];
+ const h=`
+ <div class="chips"><span class="chip on">Alle · 23</span><span class="chip">Wohnzimmer · 6</span><span class="chip">Küche · 4</span><span class="chip">Schlafzimmer · 3</span><span class="chip">Büro · 4</span><span class="chip">Flur · 2</span><span class="chip">Außen · 4</span></div>
+ <div class="notice">${I.shield}QR-Codes und Einrichtungscodes sind nur nach Anmeldung sichtbar · Auslieferung mit Cache-Control: private, no-store</div>
+ <div class="gal">${devs.map((d,i)=>`<div class="card dev">
+  <div class="qr ${d[6]?'lock':''}">${qr(i+3)}${d[6]?`<div class="lk">${I.lock}Zum Anzeigen klicken</div>`:''}</div>
+  <div class="t"><div><p>${d[0]}</p><small>${d[1]}</small></div><span class="pill ${d[3]}"><span class="dot" style="width:6px;height:6px;box-shadow:none;background:currentColor"></span>${d[4]}</span></div>
+  <div class="f"><span class="pill">${d[2]}</span><span class="code">${d[6]?'•••-••-•••':d[5]}</span></div></div>`).join('')}</div>`;
+ return {html:h,act:`<span style="display:flex;gap:10px"><span class="btn g">${I.print}Druckansicht</span><span class="btn g">${I.dl}Als PDF</span></span>`};
+}
+
+const screens=[
+ ['Dashboard','dash','Dashboard','Willkommen zurück, Alexander — Stand 16. Oktober 2026',dashboard],
+ ['Lizenzverwaltung','lic','Lizenzen','48 Lizenzen · Schlüssel verschlüsselt gespeichert',licenses],
+ ['HomeKit-QR-Code-Galerie','hk','HomeKit-QR-Codes','23 Geräte in 6 Räumen · Demo-Codes, keine echten Kopplungsdaten',homekit]];
+let out='';
+for(const [lab,k,t,s,fn] of screens){
+ out+=`<div><div class="lab"><b>☀</b> Light · ${lab}</div>${shell(k,t,s,fn(),false)}</div>`;
+ out+=`<div><div class="lab"><b>☾</b> Dark · ${lab}</div>${shell(k,t,s,fn(),true)}</div>`;
+}
+document.getElementById('grid').innerHTML=out;
+
+document.getElementById('dock').innerHTML=`
+<div>
+ <h2>Docker-Selfhosting-Konzept</h2><p class="sub">Compose-Stack für Unraid · DB wahlweise intern oder extern · keine ungetaggten latest-Images</p>
+ <div class="arch">
+  <div class="lay"><div class="box g"><b>Browser</b><small>https://licensevault.example.local</small></div><div class="box g"><b>Nginx Proxy Manager</b><small>HTTPS · Zugriffsbeschränkung</small></div></div>
+  <div class="arr">▼</div>
+  <div class="lay"><div class="box h"><b>nginx</b><small>:8080 · nur Reverse-Proxy-Netz</small></div><div class="box h"><b>app · Laravel / PHP-FPM 8.5</b><small>Scheduler · Healthcheck /up</small></div></div>
+  <div class="arr">▼</div>
+  <div class="modes">
+   <div class="box"><span class="m">MODUS A</span><b>db · PostgreSQL 16</b><small>compose.local-db.yaml<br>nicht auf dem Host veröffentlicht</small></div>
+   <div class="box g"><span class="m" style="background:#4fd6a0">MODUS B</span><b>Externes PostgreSQL</b><small>DB_HOST=192.168.1.10<br>eigene DB + eigener Benutzer</small></div>
+  </div>
+  <div class="arr">▼</div>
+  <div class="lay">
+   <div class="box"><b>/mnt/user/appdata/licensevault</b><small>storage/ · uploads/ · exports/ · postgres/</small></div>
+   <div class="box g"><b>Backup-Ziel (extern)</b><small>verschlüsselt · Restore getestet</small></div>
+  </div>
+ </div>
+</div>
+<div>
+ <h5>compose.yaml</h5>
+<pre><span class="k">services:</span>
+  <span class="k">nginx:</span>
+    <span class="k">image:</span> nginx:<span class="s">1.27-alpine</span>   <span class="c"># fixierte Tags</span>
+    <span class="k">depends_on:</span> [app]
+  <span class="k">app:</span>
+    <span class="k">image:</span> ghcr.io/you/licensevault:<span class="s">1.0.0</span>
+    <span class="k">env_file:</span> .env              <span class="c"># Secrets nur hier</span>
+    <span class="k">volumes:</span>
+      - ./uploads:/var/www/uploads   <span class="c"># nie öffentlich</span>
+      - ./storage:/var/www/storage
+    <span class="k">healthcheck:</span> {test: [<span class="s">"CMD","php","artisan","about"</span>]}
+<span class="c"># compose.local-db.yaml → Service "db" (Modus A)</span></pre>
+ <h5>Betrieb &amp; Sicherheit</h5>
+ <div class="sec-list"><span>Single-User, Registrierung aus</span><span>Lizenzschlüssel verschlüsselt</span><span>Dokumente nur via Auth-Route</span><span>Login-Rate-Limits &amp; CSRF</span><span>Keine unnötigen Ports</span><span>Backup + getesteter Restore</span></div>
+ <pre style="margin-top:18px;margin-bottom:0"><span class="c"># Modus A (intern)</span>
+docker compose -f compose.yaml -f compose.local-db.yaml up -d
+<span class="c"># Modus B (extern)</span>
+docker compose -f compose.yaml up -d</pre>
+</div>`;
+</script></body></html>
