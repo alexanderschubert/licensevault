@@ -301,7 +301,7 @@ curl http://localhost:8080/up   # Healthcheck
 
 ## Design-Entscheidung
 
-UI-Mockup siehe `mockup/LicenseVault-Mockup.png`. Der Hero-Bereich (Login und Dashboard-Kopf) erhält einen **Glas-Look** (Glassmorphism: Backdrop-Blur, transluzente Flächen, feine Lichtkante, weicher Farbverlauf-Hintergrund) – in Light und Dark. Datenlastige Bereiche (Tabellen, Formulare) bleiben flach und kontrastreich für Lesbarkeit.
+UI-Mockup siehe `docs/mockup/LicenseVault-Mockup.png`. Der Hero-Bereich (Login und Dashboard-Kopf) erhält einen **Glas-Look** (Glassmorphism: Backdrop-Blur, transluzente Flächen, feine Lichtkante, weicher Farbverlauf-Hintergrund) – in Light und Dark. Datenlastige Bereiche (Tabellen, Formulare) bleiben flach und kontrastreich für Lesbarkeit.
 
 ## Status
 
