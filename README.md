@@ -321,3 +321,7 @@ UI-Mockup siehe `docs/mockup/LicenseVault-Mockup.png`. Der Hero-Bereich (Login u
 - Unraid: All-in-One-Image (`--target aio`) = EIN Container mit nginx, PHP-FPM, Scheduler und eingebettetem PostgreSQL 16, ein Volume `/data`, automatische Schlüssel/DB-Einrichtung, Admin beim ersten Start aus Variablen; Templates in `unraid/`, Anleitung `docs/UNRAID-TEMPLATE.md`. Im Container getestet: Erststart, Login, Backup/Restore, Neustart mit Persistenz.
 - Update auf Phase 2–5 (Unraid): Backup, Dateien aktualisieren, `RUN_MIGRATIONS=true` setzen, `docker compose ... up -d --build`, danach wieder `false`.
 - Unraid-Anleitung: `docs/UNRAID.md`.
+
+## Lizenz
+
+MIT – siehe [LICENSE](LICENSE).
