@@ -1,0 +1,69 @@
+@import 'tailwindcss';
+
+@source '../../storage/framework/views/*.php';
+@custom-variant dark (&:where(.dark, .dark *));
+
+:root {
+    --bg: #f5f6fa; --panel: #ffffff; --panel2: #f0f1f7; --line: #e4e6ef;
+    --tx: #14152b; --tx2: #5d6078; --tx3: #8d90a8;
+    --ac: #5b5bd6; --acs: #ececfc; --ac-tx: #ffffff;
+    --ok: #12805c; --oks: #dcf5ea; --wa: #a55b00; --was: #fdeccf; --er: #c42b3a; --ers: #fde1e4;
+    --shadow: 0 1px 2px rgb(20 21 43 / .05), 0 8px 24px rgb(20 21 43 / .05);
+    --glass-bg: rgb(255 255 255 / .55); --glass-line: rgb(255 255 255 / .7);
+    --blob1: #8c8df7; --blob2: #f0a3d4; --blob3: #7ad7f0;
+}
+.dark {
+    --bg: #0d0e17; --panel: #161826; --panel2: #1d2033; --line: #262a40;
+    --tx: #eceef9; --tx2: #a0a4c0; --tx3: #6c7090;
+    --ac: #8c8df7; --acs: #26284d; --ac-tx: #0d0e17;
+    --ok: #4fd6a0; --oks: #12332a; --wa: #f3b45a; --was: #3a2b10; --er: #ff7b88; --ers: #40191f;
+    --shadow: 0 1px 2px rgb(0 0 0 / .4), 0 8px 24px rgb(0 0 0 / .3);
+    --glass-bg: rgb(30 33 58 / .45); --glass-line: rgb(255 255 255 / .12);
+    --blob1: #5b5bd6; --blob2: #a23b8f; --blob3: #1d7fa0;
+}
+
+@theme inline {
+    --font-sans: ui-sans-serif, -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    --color-bg: var(--bg); --color-panel: var(--panel); --color-panel2: var(--panel2); --color-line: var(--line);
+    --color-ink: var(--tx); --color-ink2: var(--tx2); --color-ink3: var(--tx3);
+    --color-ac: var(--ac); --color-acs: var(--acs); --color-ac-tx: var(--ac-tx);
+    --color-ok: var(--ok); --color-oks: var(--oks); --color-wa: var(--wa); --color-was: var(--was);
+    --color-er: var(--er); --color-ers: var(--ers);
+}
+
+@layer base {
+    body { @apply bg-bg text-ink font-sans antialiased; }
+    [x-cloak] { display: none !important; }
+}
+
+@layer components {
+    .card { @apply bg-panel border border-line rounded-2xl; box-shadow: var(--shadow); }
+    .field { @apply w-full rounded-xl border border-line bg-panel px-3.5 py-2.5 text-sm text-ink outline-none transition focus:border-ac focus:ring-4 focus:ring-acs; }
+    .btn { @apply inline-flex items-center justify-center gap-2 rounded-xl px-4 py-2.5 text-sm font-semibold transition bg-ac text-ac-tx hover:brightness-110 focus-visible:ring-4 focus-visible:ring-acs; }
+    .btn-ghost { @apply bg-panel text-ink border border-line hover:bg-panel2 hover:brightness-100; }
+    .btn-danger { @apply bg-er text-white; }
+    .pill { @apply inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-xs font-semibold bg-panel2 text-ink2; }
+    .pill-ok { @apply bg-oks text-ok; } .pill-wa { @apply bg-was text-wa; } .pill-er { @apply bg-ers text-er; } .pill-ac { @apply bg-acs text-ac; }
+
+    .chip { @apply rounded-full border border-line bg-panel px-3.5 py-1.5 text-[13px] font-medium text-ink2 hover:bg-panel2; }
+    .chip-on { @apply bg-ac text-ac-tx border-ac hover:bg-ac; }
+
+    /* Glas-Look für Hero-Bereiche */
+    .glass {
+        background: var(--glass-bg);
+        border: 1px solid var(--glass-line);
+        -webkit-backdrop-filter: blur(24px) saturate(170%);
+        backdrop-filter: blur(24px) saturate(170%);
+        box-shadow: inset 0 1px 0 rgb(255 255 255 / .35), 0 20px 50px rgb(20 21 43 / .12);
+    }
+    .hero-bg {
+        position: relative; overflow: hidden; isolation: isolate;
+        background: linear-gradient(135deg, color-mix(in srgb, var(--blob1) 18%, var(--bg)), var(--bg));
+    }
+    .hero-bg::before, .hero-bg::after, .hero-bg .blob {
+        content: ''; position: absolute; z-index: -1; border-radius: 9999px; filter: blur(60px); opacity: .75;
+    }
+    .hero-bg::before { width: 420px; height: 420px; background: var(--blob1); top: -140px; left: -80px; }
+    .hero-bg::after { width: 360px; height: 360px; background: var(--blob2); bottom: -160px; right: 8%; }
+    .hero-bg .blob { width: 280px; height: 280px; background: var(--blob3); top: 10%; right: -60px; }
+}
