@@ -1,0 +1,54 @@
+# LicenseVault – App-Services. Datenbank: siehe compose.local-db.yaml (Modus A)
+# bzw. externe Instanz über DB_* in .env (Modus B).
+name: licensevault
+
+services:
+  app:
+    build:
+      context: .
+      target: app
+      args:
+        UID: ${PUID:-99}    # Unraid: nobody
+        GID: ${PGID:-100}   # Unraid: users
+    image: licensevault-app:0.1.0
+    restart: unless-stopped
+    env_file: .env
+    environment:
+      TZ: ${APP_TIMEZONE:-Europe/Berlin}
+    volumes:
+      - ${DATA_DIR:-./data}/storage:/var/www/html/storage
+      - ${DATA_DIR:-./data}/uploads:/var/www/html/storage/app/private/uploads
+      - ${DATA_DIR:-./data}/exports:/var/www/html/storage/app/private/exports
+      - ${DATA_DIR:-./data}/backups:/var/www/html/storage/app/private/backups
+    healthcheck:
+      test: ["CMD-SHELL", "php -r 'exit(@fsockopen(\"127.0.0.1\",9000)?0:1);'"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+    security_opt: [no-new-privileges:true]
+
+  web:
+    build: { context: ., target: web }
+    image: licensevault-web:0.1.0
+    restart: unless-stopped
+    depends_on: [app]
+    ports:
+      - "${WEB_PORT:-8080}:8080"   # hinter Reverse Proxy ggf. nur im internen Netz betreiben
+    healthcheck:
+      test: ["CMD-SHELL", "wget -q -O /dev/null http://127.0.0.1:8080/up || exit 1"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+    security_opt: [no-new-privileges:true]
+
+  scheduler:
+    image: licensevault-app:0.1.0
+    restart: unless-stopped
+    depends_on: [app]
+    env_file: .env
+    command: ["sh", "-c", "while true; do php artisan schedule:run --no-interaction; sleep 60; done"]
+    volumes:
+      - ${DATA_DIR:-./data}/storage:/var/www/html/storage
+      - ${DATA_DIR:-./data}/uploads:/var/www/html/storage/app/private/uploads
+      - ${DATA_DIR:-./data}/backups:/var/www/html/storage/app/private/backups
+    security_opt: [no-new-privileges:true]

@@ -1,0 +1,23 @@
+# Modus A: eigener PostgreSQL-Container. Aufruf:
+#   docker compose -f compose.yaml -f compose.local-db.yaml up -d
+# DB_HOST in .env muss "db" sein. Port wird bewusst NICHT veröffentlicht.
+services:
+  db:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${DB_DATABASE:-licensevault}
+      POSTGRES_USER: ${DB_USERNAME:-licensevault}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:?DB_PASSWORD setzen}
+    volumes:
+      - ${DATA_DIR:-./data}/postgres:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+    security_opt: [no-new-privileges:true]
+
+  app:
+    depends_on:
+      db: { condition: service_healthy }

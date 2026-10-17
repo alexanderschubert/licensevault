@@ -1,0 +1,52 @@
+<?xml version="1.0"?>
+<!-- Dieses Template nutzt ein lokal gebautes Image: im Projektordner "docker build" mit Ziel aio und Name licensevault:0.6.0 ausfuehren (siehe docs/UNRAID-TEMPLATE.md). -->
+<Container version="2">
+  <Name>LicenseVault</Name>
+  <Repository>licensevault:0.6.0</Repository>
+  <Registry></Registry>
+  <Network>bridge</Network>
+  <MyIP/>
+  <Shell>sh</Shell>
+  <Privileged>false</Privileged>
+  <Support>https://github.com/OWNER/licensevault/issues</Support>
+  <Project>https://github.com/OWNER/licensevault</Project>
+  <Overview>Private, selbst gehostete Verwaltung von Software-Lizenzen, Konto-Zugängen, Dokumenten sowie HomeKit- und Matter-QR-Codes. EIN Container (Web-Oberfläche, Scheduler und PostgreSQL eingebettet), ein Volume. Verschlüsselte Schlüssel, tägliche verschlüsselte Backups, Erinnerungen per Web-Push (iPhone-App) und Gotify.</Overview>
+  <Category>Tools: Productivity:</Category>
+  <WebUI>http://[IP]:[PORT:8080]/</WebUI>
+  <TemplateURL/>
+  <Icon>https://raw.githubusercontent.com/OWNER/licensevault/main/public/icons/icon-192-v3.png</Icon>
+  <ExtraParams>--stop-timeout 90</ExtraParams>
+  <PostArgs/>
+  <CPUset/>
+  <DateInstalled/>
+  <DonateText/>
+  <DonateLink/>
+  <Requires/>
+  <Config Name="Web-Oberfläche (Port)" Target="8080" Default="8080" Mode="tcp" Description="Port, unter dem LicenseVault erreichbar ist." Type="Port" Display="always" Required="true" Mask="false">8080</Config>
+  <Config Name="Daten" Target="/data" Default="/mnt/user/appdata/licensevault" Mode="rw" Description="Alles Persistente (Datenbank, Uploads, Backups, Schlüssel) liegt hier. Auf eine Platte/Share legen, die gesichert wird." Type="Path" Display="always" Required="true" Mask="false">/mnt/user/appdata/licensevault</Config>
+  <Config Name="APP_URL" Target="APP_URL" Default="http://DEINE-UNRAID-IP:8080" Mode="" Description="Adresse, unter der du LicenseVault öffnest (bei Reverse Proxy die https-Adresse)." Type="Variable" Display="always" Required="true" Mask="false">http://DEINE-UNRAID-IP:8080</Config>
+  <Config Name="SESSION_SECURE_COOKIE" Target="SESSION_SECURE_COOKIE" Default="false" Mode="" Description="false bei Zugriff über http://IP:Port, true bei HTTPS (Reverse Proxy)." Type="Variable" Display="always" Required="true" Mask="false">false</Config>
+  <Config Name="Admin: Name" Target="ADMIN_NAME" Default="Admin" Mode="" Description="Nur beim ERSTEN Start: Name des Administrators." Type="Variable" Display="always" Required="false" Mask="false">Admin</Config>
+  <Config Name="Admin: E-Mail" Target="ADMIN_EMAIL" Default="" Mode="" Description="Nur beim ersten Start: E-Mail des Administrators (Login)." Type="Variable" Display="always" Required="false" Mask="false"></Config>
+  <Config Name="Admin: Passwort" Target="ADMIN_PASSWORD" Default="" Mode="" Description="Nur beim ersten Start (mind. 12 Zeichen, Groß-/Kleinbuchstaben, Zahl). Danach diese Variable LÖSCHEN." Type="Variable" Display="always" Required="false" Mask="true"></Config>
+  <Config Name="Backup-Passphrase" Target="BACKUP_PASSPHRASE" Default="" Mode="" Description="Mind. 12 Zeichen. Aktiviert die täglichen verschlüsselten Sicherungen (03:00 Uhr). Getrennt aufbewahren!" Type="Variable" Display="always" Required="false" Mask="true"></Config>
+  <Config Name="APP_KEY (optional)" Target="APP_KEY" Default="" Mode="" Description="Leer lassen: wird beim ersten Start erzeugt (steht im Container-Log und in /data/config/app.key). Sichere ihn zusätzlich getrennt!" Type="Variable" Display="advanced" Required="false" Mask="true"></Config>
+  <Config Name="Zeitzone" Target="APP_TIMEZONE" Default="Europe/Berlin" Mode="" Description="Zeitzone für Termine und Erinnerungen." Type="Variable" Display="advanced" Required="false" Mask="false">Europe/Berlin</Config>
+  <Config Name="Erinnerungs-Fristen" Target="REMINDER_DAYS" Default="30,7,1" Mode="" Description="Tage vor Ablauf/Verlängerung, an denen erinnert wird." Type="Variable" Display="advanced" Required="false" Mask="false">30,7,1</Config>
+  <Config Name="Backups behalten" Target="BACKUP_KEEP" Default="14" Mode="" Description="Anzahl der aufbewahrten täglichen Sicherungen." Type="Variable" Display="advanced" Required="false" Mask="false">14</Config>
+  <Config Name="Backup-Uhrzeit" Target="BACKUP_TIME" Default="03:00" Mode="" Description="Uhrzeit der täglichen Sicherung." Type="Variable" Display="advanced" Required="false" Mask="false">03:00</Config>
+  <Config Name="Vertrauenswürdige Proxys" Target="TRUSTED_PROXIES" Default="" Mode="" Description="Optional: IP/CIDR des Reverse Proxys (leer = private Netze)." Type="Variable" Display="advanced" Required="false" Mask="false"></Config>
+  <Config Name="Migrationen automatisch" Target="RUN_MIGRATIONS" Default="true" Mode="" Description="Datenbank bei Updates automatisch aktualisieren (mit Sicherung davor, wenn eine Backup-Passphrase gesetzt ist)." Type="Variable" Display="advanced" Required="false" Mask="false">true</Config>
+  <Config Name="Eingebettete Datenbank" Target="EMBEDDED_DB" Default="true" Mode="" Description="true = PostgreSQL läuft im selben Container (ein Container insgesamt). false = externes PostgreSQL (dann DB_* setzen)." Type="Variable" Display="advanced" Required="false" Mask="false">true</Config>
+  <Config Name="Externe DB: Host" Target="DB_HOST" Default="" Mode="" Description="Nur bei EMBEDDED_DB=false. PostgreSQL bis Version 16." Type="Variable" Display="advanced" Required="false" Mask="false"></Config>
+  <Config Name="Externe DB: Port" Target="DB_PORT" Default="5432" Mode="" Description="Nur bei EMBEDDED_DB=false." Type="Variable" Display="advanced" Required="false" Mask="false">5432</Config>
+  <Config Name="Externe DB: Datenbank" Target="DB_DATABASE" Default="licensevault" Mode="" Description="Nur bei EMBEDDED_DB=false." Type="Variable" Display="advanced" Required="false" Mask="false">licensevault</Config>
+  <Config Name="Externe DB: Benutzer" Target="DB_USERNAME" Default="licensevault" Mode="" Description="Nur bei EMBEDDED_DB=false." Type="Variable" Display="advanced" Required="false" Mask="false">licensevault</Config>
+  <Config Name="Externe DB: Passwort" Target="DB_PASSWORD" Default="" Mode="" Description="Nur bei EMBEDDED_DB=false." Type="Variable" Display="advanced" Required="false" Mask="true"></Config>
+  <Config Name="Web-Push: öffentlicher Schlüssel" Target="VAPID_PUBLIC_KEY" Default="" Mode="" Description="Optional. Erzeugen: docker exec -u app LicenseVault php artisan licensevault:vapid-keys" Type="Variable" Display="advanced" Required="false" Mask="false"></Config>
+  <Config Name="Web-Push: privater Schlüssel" Target="VAPID_PRIVATE_KEY" Default="" Mode="" Description="Optional, geheim halten." Type="Variable" Display="advanced" Required="false" Mask="true"></Config>
+  <Config Name="Web-Push: Absender" Target="VAPID_SUBJECT" Default="mailto:du@example.com" Mode="" Description="Optional: mailto:-Adresse für Web-Push." Type="Variable" Display="advanced" Required="false" Mask="false">mailto:du@example.com</Config>
+  <Config Name="Gotify: URL" Target="GOTIFY_URL" Default="" Mode="" Description="Optional: Adresse deines Gotify-Servers." Type="Variable" Display="advanced" Required="false" Mask="false"></Config>
+  <Config Name="Gotify: Token" Target="GOTIFY_TOKEN" Default="" Mode="" Description="Optional: App-Token aus Gotify." Type="Variable" Display="advanced" Required="false" Mask="true"></Config>
+  <Config Name="Gotify: Priorität" Target="GOTIFY_PRIORITY" Default="5" Mode="" Description="Optional." Type="Variable" Display="advanced" Required="false" Mask="false">5</Config>
+</Container>

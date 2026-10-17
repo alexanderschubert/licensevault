@@ -1,0 +1,14 @@
+# Fertige Images aus GHCR statt lokalem Build. Verwendung:
+#   LV_VERSION=0.5.0 LV_OWNER=<github-benutzer> docker compose -f compose.yaml -f compose.release.yaml [-f compose.local-db.yaml] up -d
+# (Die App-Images werden mit UID 99 / GID 100 gebaut – passend für Unraid.)
+services:
+  app:
+    image: ghcr.io/${LV_OWNER:?LV_OWNER setzen}/licensevault-app:${LV_VERSION:?LV_VERSION setzen}
+    build: !reset null
+    pull_policy: always
+  scheduler:
+    image: ghcr.io/${LV_OWNER}/licensevault-app:${LV_VERSION}
+  web:
+    image: ghcr.io/${LV_OWNER}/licensevault-web:${LV_VERSION}
+    build: !reset null
+    pull_policy: always
