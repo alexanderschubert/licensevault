@@ -216,7 +216,7 @@ class BackupTest extends TestCase
 
     public function test_csv_export_excludes_secrets_and_neutralizes_formulas(): void
     {
-        License::factory()->create(['name' => '=HYPERLINK("http://evil")', 'secret' => 'TOPSECRET-123', 'notes' => '@cmd']);
+        License::factory()->withKey('TOPSECRET-123')->create(['name' => '=HYPERLINK("http://evil")', 'notes' => '@cmd']);
         HomekitDevice::factory()->create(['setup_code' => '555-55-555', 'qr_payload' => 'X-HM://000000000XXX1']);
         $u = User::factory()->create();
 

@@ -17,7 +17,7 @@ class LicenseTest extends TestCase
     {
         return array_merge([
             'name' => 'Test Suite', 'vendor' => 'ACME', 'license_type' => 'subscription',
-            'secret' => 'ABCD-1234-SECRET', 'currency' => 'EUR', 'billing_interval' => 'monthly', 'purchase_price' => '49.90',
+            'keys' => [['label' => 'Basis', 'secret' => 'ABCD-1234-SECRET']], 'currency' => 'EUR', 'billing_interval' => 'monthly', 'purchase_price' => '49.90',
             'expires_at' => today()->addDays(20)->format('Y-m-d'), 'category' => 'Entwicklung', 'tags' => 'ide, Arbeit, ide',
         ], $o);
     }
@@ -27,7 +27,7 @@ class LicenseTest extends TestCase
         $l = License::factory()->create();
         $this->get('/lizenzen')->assertRedirect('/login');
         $this->post('/lizenzen', $this->payload())->assertRedirect('/login');
-        $this->post("/lizenzen/{$l->id}/schluessel")->assertRedirect('/login');
+        $this->post("/lizenzen/{$l->id}/schluessel/1")->assertRedirect('/login');
         $this->delete("/lizenzen/{$l->id}")->assertRedirect('/login');
     }
 
@@ -36,45 +36,67 @@ class LicenseTest extends TestCase
         $this->actingAs(User::factory()->create())->post('/lizenzen', $this->payload())->assertRedirect();
         $l = License::firstOrFail();
 
-        $raw = DB::table('licenses')->where('id', $l->id)->value('secret_ciphertext');
+        $raw = DB::table('license_keys')->where('license_id', $l->id)->value('secret_ciphertext');
         $this->assertStringNotContainsString('ABCD-1234-SECRET', $raw);
         $this->assertStringStartsWith('v1:', $raw);
         $this->assertSame('ABCD-1234-SECRET', SecretVault::decrypt($raw));
+        $this->assertSame('Basis', $l->keys->first()->label);
         $this->assertSame(['Arbeit', 'ide'], $l->tags->pluck('name')->sort()->values()->all());
         $this->assertSame('Entwicklung', $l->category->name);
-        $this->assertArrayNotHasKey('secret_ciphertext', $l->toArray());
+        $this->assertArrayNotHasKey('secret_ciphertext', $l->keys->first()->toArray());
     }
 
     public function test_secret_is_never_rendered_in_pages_only_via_reveal(): void
     {
         $u = User::factory()->create();
-        $l = License::factory()->create(['secret' => 'TOP-SECRET-KEY-1']);
-        foreach (['/lizenzen', "/lizenzen/{$l->id}", "/lizenzen/{$l->id}/edit", '/'] as $uri) {
+        $l = License::factory()->withKey('TOP-SECRET-KEY-1', 'Pro')->create();
+        foreach (['/lizenzen', '/lizenzen?view=list', "/lizenzen/{$l->id}", "/lizenzen/{$l->id}/edit", '/'] as $uri) {
             $this->actingAs($u)->get($uri)->assertOk()->assertDontSee('TOP-SECRET-KEY-1');
         }
-        $this->actingAs($u)->post("/lizenzen/{$l->id}/schluessel")->assertOk()
+        $key = $l->keys->first();
+        $this->actingAs($u)->post("/lizenzen/{$l->id}/schluessel/{$key->id}")->assertOk()
             ->assertJson(['secret' => 'TOP-SECRET-KEY-1'])
             ->assertHeader('Cache-Control', 'max-age=0, no-store, private');
+        $this->actingAs($u)->get('/lizenzen')->assertSee('Pro');
     }
 
-    public function test_multiple_license_numbers_are_stored_encrypted_and_revealed_together(): void
+    public function test_multiple_keys_with_labels_are_independent_and_scoped_to_their_license(): void
     {
         $u = User::factory()->create();
-        $this->actingAs($u)->post('/lizenzen', $this->payload(['secret' => "AAAA-1111\nBBBB-2222\nCCCC-3333"]))->assertRedirect();
+        $this->actingAs($u)->post('/lizenzen', $this->payload(['keys' => [
+            ['label' => 'Basis', 'secret' => 'AAAA-1111'],
+            ['label' => 'Pro-Modul', 'secret' => 'BBBB-2222'],
+            ['label' => 'leer', 'secret' => ''],
+        ]]))->assertRedirect();
         $l = License::firstOrFail();
-        $this->assertStringNotContainsString('BBBB-2222', DB::table('licenses')->where('id', $l->id)->value('secret_ciphertext'));
-        $this->actingAs($u)->get("/lizenzen/{$l->id}")->assertOk()->assertDontSee('BBBB-2222');
-        $this->actingAs($u)->post("/lizenzen/{$l->id}/schluessel")->assertOk()->assertJson(['secret' => "AAAA-1111\nBBBB-2222\nCCCC-3333"]);
+        $this->assertCount(2, $l->keys);
+        [$a, $b] = $l->keys->all();
+        $this->actingAs($u)->get("/lizenzen/{$l->id}")->assertOk()->assertSee('Pro-Modul')->assertDontSee('BBBB-2222');
+        $this->actingAs($u)->post("/lizenzen/{$l->id}/schluessel/{$b->id}")->assertJson(['secret' => 'BBBB-2222']);
+
+        $other = License::factory()->create();
+        $this->actingAs($u)->post("/lizenzen/{$other->id}/schluessel/{$a->id}")->assertNotFound();
     }
 
-    public function test_update_keeps_secret_when_blank_and_can_clear(): void
+    public function test_update_keeps_blank_keys_edits_label_adds_and_removes(): void
     {
         $u = User::factory()->create();
-        $l = License::factory()->create(['secret' => 'KEEP-ME']);
-        $this->actingAs($u)->put("/lizenzen/{$l->id}", $this->payload(['secret' => '', 'name' => 'Neu']))->assertRedirect();
-        $this->assertSame('KEEP-ME', $l->fresh()->secret);
-        $this->assertSame('Neu', $l->fresh()->name);
-        $this->actingAs($u)->put("/lizenzen/{$l->id}", $this->payload(['secret' => '', 'clear_secret' => '1']))->assertRedirect();
+        $l = License::factory()->withKey('KEEP-ME', 'Alt')->create();
+        $k = $l->keys->first();
+
+        $this->actingAs($u)->put("/lizenzen/{$l->id}", $this->payload(['name' => 'Neu', 'keys' => [
+            ['id' => $k->id, 'label' => 'Umbenannt', 'secret' => ''],
+            ['id' => '', 'label' => 'Zweit', 'secret' => 'NEW-KEY'],
+        ]]))->assertRedirect();
+        $l = $l->fresh()->load('keys');
+        $this->assertSame('Neu', $l->name);
+        $this->assertSame(['Umbenannt', 'Zweit'], $l->keys->pluck('label')->all());
+        $this->assertSame('KEEP-ME', $l->keys[0]->secret);
+        $this->assertSame('NEW-KEY', $l->keys[1]->secret);
+
+        $this->actingAs($u)->put("/lizenzen/{$l->id}", $this->payload(['keys' => [['id' => $k->id, 'remove' => '1']]]))->assertRedirect();
+        $this->assertSame(['Zweit'], $l->fresh()->keys->pluck('label')->all());
+        $this->actingAs($u)->put("/lizenzen/{$l->id}", $this->payload(['keys' => [['id' => $l->keys[1]->id, 'remove' => '1']]]))->assertRedirect();
         $this->assertFalse($l->fresh()->hasSecret());
     }
 
@@ -154,7 +176,7 @@ class LicenseTest extends TestCase
     {
         $u = User::factory()->create();
         $this->actingAs($u)->post('/lizenzen', $this->payload([
-            'name' => 'CleanMyMac 5', 'secret' => '', 'account_login' => 'me@example.test',
+            'name' => 'CleanMyMac 5', 'keys' => [], 'account_login' => 'me@example.test',
             'account_password' => 'Konto-Pass-123!', 'account_url' => 'https://example.test/login',
         ]))->assertRedirect();
 
@@ -176,9 +198,9 @@ class LicenseTest extends TestCase
 
         // leer lassen = unverändert, Häkchen = entfernen
         $this->actingAs($u);
-        $this->actingAs($u)->put("/lizenzen/{$l->id}", $this->payload(['name' => 'CleanMyMac 5', 'secret' => '', 'account_password' => '']))->assertRedirect();
+        $this->actingAs($u)->put("/lizenzen/{$l->id}", $this->payload(['name' => 'CleanMyMac 5', 'keys' => [], 'account_password' => '']))->assertRedirect();
         $this->assertSame('Konto-Pass-123!', $l->fresh()->account_password);
-        $this->actingAs($u)->put("/lizenzen/{$l->id}", $this->payload(['name' => 'CleanMyMac 5', 'secret' => '', 'clear_account_password' => '1']))->assertRedirect();
+        $this->actingAs($u)->put("/lizenzen/{$l->id}", $this->payload(['name' => 'CleanMyMac 5', 'keys' => [], 'clear_account_password' => '1']))->assertRedirect();
         $this->assertFalse($l->fresh()->hasAccountPassword());
     }
 

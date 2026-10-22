@@ -158,7 +158,7 @@ class NotificationTest extends TestCase
     {
         $fake = new FakeChannel(false);
         $notifier = new Notifier([$fake]);
-        $l = License::factory()->create(['secret' => 'GEHEIMER-SCHLUESSEL', 'expires_at' => today()->addDays(3)]);
+        $l = License::factory()->withKey('GEHEIMER-SCHLUESSEL')->create(['expires_at' => today()->addDays(3)]);
         $this->assertSame(0, $notifier->notifyReminders(collect([Reminder::create(['license_id' => $l->id, 'kind' => 'expires', 'due_on' => today()->addDays(3), 'lead_days' => 7])])));
         $this->assertSame([], $fake->sent);
 

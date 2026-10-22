@@ -18,11 +18,24 @@
                 <span class="pill {{ $st['class'] }}">{{ $l->expires_at ? $st['label'] : 'unbegrenzt' }}</span>
                 @foreach($l->platformEnums() as $pl)<span class="pill">{{ $pl->label() }}</span>@endforeach
             </div>
+            @if($l->keys->isNotEmpty())
+            <div class="relative z-10 flex flex-wrap gap-1.5">
+                @foreach($l->keys as $k)
+                    <div x-data="secretBox('{{ route('licenses.reveal', [$l, $k]) }}')" class="min-w-0 max-w-full">
+                        <button type="button" class="inline-flex max-w-full items-center gap-1.5 rounded-lg bg-panel2 px-2.5 py-1 text-xs text-ink2 hover:text-ac" @click="value ? copy() : show()" :title="value ? 'Zum Kopieren klicken' : 'Zum Anzeigen klicken (30 s)'">
+                            <x-icon name="lock" class="size-3.5 shrink-0" />
+                            <span class="truncate font-mono" x-text="value ? (copied ? 'Kopiert' : value) : @js($k->label ?: 'Schlüssel '.($loop->index + 1))">{{ $k->label ?: 'Schlüssel '.($loop->index + 1) }}</span>
+                        </button>
+                        <p x-show="error" x-cloak x-text="error" class="mt-1 text-xs text-er"></p>
+                    </div>
+                @endforeach
+            </div>
+            @endif
             <div class="mt-auto flex items-end justify-between gap-2 border-t border-line pt-3 text-sm">
                 <div class="min-w-0 text-ink2">
                     @if($l->devices->isNotEmpty())<div class="truncate text-xs" title="{{ $l->devices->pluck('name')->implode(', ') }}">{{ $l->devices->count() }}{{ $l->device_limit ? ' / '.$l->device_limit : '' }} Gerät(e) · {{ $l->devices->pluck('name')->implode(', ') }}</div>
                     @elseif($l->device_limit)<div class="text-xs text-ink3">bis {{ $l->device_limit }} Geräte</div>@endif
-                    <div class="mt-1 flex gap-1.5 text-ink3">@if($l->hasSecret())<span class="inline-flex items-center gap-1 text-xs"><x-icon name="lock" class="size-3.5" />Schlüssel</span>@endif @if($l->hasAccount())<span class="inline-flex items-center gap-1 text-xs"><x-icon name="key" class="size-3.5" />Konto</span>@endif</div>
+                    <div class="mt-1 flex gap-1.5 text-ink3">@if($l->hasAccount())<span class="inline-flex items-center gap-1 text-xs"><x-icon name="key" class="size-3.5" />Konto</span>@endif</div>
                 </div>
                 <div class="shrink-0 font-semibold">{{ $l->priceLabel() }}</div>
             </div>

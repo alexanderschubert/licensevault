@@ -14,7 +14,6 @@ class LicenseFactory extends Factory
             'name' => fake()->words(2, true),
             'vendor' => fake()->company(),
             'license_type' => LicenseType::Subscription,
-            'secret' => 'TEST-AAAA-BBBB-CCCC',
             'purchase_date' => today()->subMonths(3),
             'purchase_price' => 99.00,
             'currency' => 'EUR',
@@ -22,5 +21,11 @@ class LicenseFactory extends Factory
             'expires_at' => today()->addMonths(9),
             'device_limit' => 3,
         ];
+    }
+
+    /** Lizenz mit einem Schlüssel (optional mit Bezeichnung). */
+    public function withKey(string $secret = 'TEST-AAAA-BBBB-CCCC', ?string $label = null): static
+    {
+        return $this->afterCreating(fn ($l) => $l->keys()->create(['secret' => $secret, 'label' => $label, 'position' => $l->keys()->count()]));
     }
 }

@@ -1,5 +1,5 @@
 # Fertige Images aus GHCR statt lokalem Build. Verwendung:
-#   LV_VERSION=0.6.2 docker compose -f compose.yaml -f compose.release.yaml [-f compose.local-db.yaml] up -d
+#   LV_VERSION=0.7.0 docker compose -f compose.yaml -f compose.release.yaml [-f compose.local-db.yaml] up -d
 # (Die App-Images werden mit UID 99 / GID 100 gebaut – passend für Unraid.)
 services:
   app:

@@ -2,7 +2,7 @@
 <!-- Image aus der GitHub Container Registry (bei privatem Repo vorher docker login ghcr.io). -->
 <Container version="2">
   <Name>LicenseVault</Name>
-  <Repository>ghcr.io/alexanderschubert/licensevault:0.6.2</Repository>
+  <Repository>ghcr.io/alexanderschubert/licensevault:0.7.0</Repository>
   <Registry>https://github.com/alexanderschubert/licensevault/pkgs/container/licensevault</Registry>
   <Network>bridge</Network>
   <MyIP/>

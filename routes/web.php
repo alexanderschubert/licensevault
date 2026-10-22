@@ -58,7 +58,7 @@ Route::middleware('auth')->group(function () {
     Route::put('/einstellungen/passwort', [PasswordController::class, 'update'])->name('settings.password.update');
 
     Route::resource('lizenzen', LicenseController::class)->names('licenses')->parameters(['lizenzen' => 'license'])->except([]);
-    Route::post('/lizenzen/{license}/schluessel', [LicenseController::class, 'reveal'])->middleware('throttle:30,1')->name('licenses.reveal');
+    Route::post('/lizenzen/{license}/schluessel/{key}', [LicenseController::class, 'reveal'])->middleware('throttle:30,1')->name('licenses.reveal');
     Route::post('/lizenzen/{license}/konto', [LicenseController::class, 'revealAccount'])->middleware('throttle:30,1')->name('licenses.reveal-account');
     Route::post('/lizenzen/{license}/wiederherstellung', [LicenseController::class, 'revealRecovery'])->middleware('throttle:30,1')->name('licenses.reveal-recovery');
     Route::get('/lizenzen/{license}/icon', [LicenseController::class, 'icon'])->name('licenses.icon');

@@ -25,13 +25,13 @@ class License extends Model
     public const SOON_DAYS = 60;
 
     protected $fillable = [
-        'name', 'vendor', 'product_version', 'license_type', 'secret', 'account_login', 'account_password', 'account_url',
+        'name', 'vendor', 'product_version', 'license_type', 'account_login', 'account_password', 'account_url',
         'purchase_date', 'purchase_price', 'currency', 'billing_interval', 'expires_at', 'renewal_date',
         'device_limit', 'category_id', 'notes', 'customer_number', 'support_contact', 'recovery_codes', 'platforms',
     ];
 
     /** Der Ciphertext verlässt das Modell nie (Serialisierung, JSON, Logs). */
-    protected $hidden = ['secret_ciphertext', 'account_secret_ciphertext', 'recovery_codes_ciphertext', 'icon_path'];
+    protected $hidden = ['account_secret_ciphertext', 'recovery_codes_ciphertext', 'icon_path'];
 
     protected function casts(): array
     {
@@ -84,13 +84,10 @@ class License extends Model
         return mb_strtoupper(mb_substr(preg_replace('/[^\p{L}\p{N}]/u', '', $this->name) ?: '?', 0, 2));
     }
 
-    /** Klartext nur bei ausdrücklichem Zugriff – wird verschlüsselt gespeichert. */
-    protected function secret(): Attribute
+    /** Lizenzschlüssel/-nummern (verschlüsselt); Klartext nur über die Reveal-Route. */
+    public function keys(): HasMany
     {
-        return Attribute::make(
-            get: fn ($v, array $a) => ($a['secret_ciphertext'] ?? null) ? SecretVault::decrypt($a['secret_ciphertext']) : null,
-            set: fn ($v) => ['secret_ciphertext' => ($v === null || $v === '') ? null : SecretVault::encrypt($v)],
-        );
+        return $this->hasMany(LicenseKey::class)->orderBy('position')->orderBy('id');
     }
 
     /** Jährliche Kosten (monatlich × 12); einmalige Zahlungen zählen nicht. */
@@ -144,7 +141,7 @@ class License extends Model
 
     public function hasSecret(): bool
     {
-        return ! empty($this->attributes['secret_ciphertext']);
+        return $this->keys->isNotEmpty();
     }
 
     public function category(): BelongsTo

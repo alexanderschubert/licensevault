@@ -43,7 +43,7 @@ class LicenseController extends Controller
         }
         unset($f['view']);
 
-        $licenses = License::query()->with(['category', 'tags', 'devices'])
+        $licenses = License::query()->with(['category', 'tags', 'devices', 'keys'])
             ->search($f['q'] ?? null)
             ->when($f['type'] ?? null, fn ($q, $v) => $q->where('license_type', $v))
             ->when($f['interval'] ?? null, fn ($q, $v) => $q->where('billing_interval', $v))
@@ -83,12 +83,12 @@ class LicenseController extends Controller
 
     public function show(License $license)
     {
-        return view('licenses.show', ['license' => $license->load(['category', 'tags', 'documents', 'devices'])]);
+        return view('licenses.show', ['license' => $license->load(['category', 'tags', 'documents', 'devices', 'keys'])]);
     }
 
     public function edit(License $license)
     {
-        return view('licenses.form', $this->formData($license->load('tags', 'category', 'devices')));
+        return view('licenses.form', $this->formData($license->load('tags', 'category', 'devices', 'keys')));
     }
 
     public function update(LicenseRequest $request, License $license): RedirectResponse
@@ -105,12 +105,12 @@ class LicenseController extends Controller
         return redirect()->route('licenses.index')->with('status', 'Lizenz wurde gelöscht.');
     }
 
-    /** Gibt den entschlüsselten Schlüssel nur auf ausdrückliche Anfrage aus. */
-    public function reveal(License $license): JsonResponse
+    /** Gibt einen entschlüsselten Schlüssel nur auf ausdrückliche Anfrage aus. */
+    public function reveal(License $license, int $key): JsonResponse
     {
-        abort_unless($license->hasSecret(), 404);
+        $row = $license->keys()->whereKey($key)->firstOrFail();
 
-        return response()->json(['secret' => $license->secret])
+        return response()->json(['secret' => $row->secret])
             ->header('Cache-Control', 'private, no-store, max-age=0')
             ->header('Pragma', 'no-cache');
     }
@@ -149,14 +149,8 @@ class LicenseController extends Controller
 
     private function fill(License $license, LicenseRequest $request): void
     {
-        $data = $request->safe()->except(['category', 'tags', 'secret', 'clear_secret', 'account_password', 'clear_account_password', 'recovery_codes', 'clear_recovery_codes', 'platforms', 'devices', 'icon', 'clear_icon']);
+        $data = $request->safe()->except(['category', 'tags', 'keys', 'account_password', 'clear_account_password', 'recovery_codes', 'clear_recovery_codes', 'platforms', 'devices', 'icon', 'clear_icon']);
         $license->fill($data);
-
-        if ($request->boolean('clear_secret')) {
-            $license->secret = null;
-        } elseif (filled($request->input('secret'))) {
-            $license->secret = $request->input('secret');
-        }
 
         if ($request->boolean('clear_account_password')) {
             $license->account_password = null;
@@ -188,9 +182,37 @@ class LicenseController extends Controller
         $name = trim((string) $request->input('category'));
         $license->category_id = $name !== '' ? Category::firstOrCreate(['name' => $name])->id : null;
         $license->save();
+        $this->syncKeys($license, (array) $request->input('keys', []));
 
         $license->tags()->sync(collect($request->tagNames())->map(fn ($n) => Tag::firstOrCreate(['name' => $n])->id));
         $license->devices()->sync(collect($request->deviceNames())->map(fn ($n) => Device::firstOrCreate(['name' => $n])->id));
+    }
+
+    /** Zeilen aus dem Formular: vorhandene (id) aktualisieren/entfernen, neue mit Inhalt anlegen; leeres Feld = unverändert. */
+    private function syncKeys(License $license, array $rows): void
+    {
+        $existing = $license->keys()->get()->keyBy('id');
+        $position = (int) $existing->max('position') + 1;
+
+        foreach ($rows as $row) {
+            $label = filled($row['label'] ?? null) ? trim($row['label']) : null;
+            $key = $existing->get((int) ($row['id'] ?? 0));
+
+            if ($key) {
+                if (! empty($row['remove'])) {
+                    $key->delete();
+
+                    continue;
+                }
+                $key->label = $label;
+                if (filled($row['secret'] ?? null)) {
+                    $key->secret = $row['secret'];
+                }
+                $key->save();
+            } elseif (filled($row['secret'] ?? null) && empty($row['remove'])) {
+                $license->keys()->create(['label' => $label, 'secret' => $row['secret'], 'position' => $position++]);
+            }
+        }
     }
 
     private function formData(License $license): array

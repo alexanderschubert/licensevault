@@ -47,11 +47,27 @@
         </div>
         <x-field name="device_limit" label="Gerätelimit" type="number" :value="$license->device_limit" min="1" />
 
-        <div class="sm:col-span-2">
-            <label for="secret" class="mb-1.5 block text-sm font-medium">Lizenzschlüssel / -nummern <span class="font-normal text-ink3">(optional, mehrere: eine pro Zeile){{ $edit && $license->hasSecret() ? ' – leer lassen = unverändert' : '' }}</span></label>
-            <textarea id="secret" name="secret" rows="2" maxlength="5000" autocomplete="off" spellcheck="false" class="field font-mono" placeholder="{{ $edit && $license->hasSecret() ? '••••••••••••' : 'XXXX-XXXX-XXXX-XXXX' }}"></textarea>
-            @error('secret')<p class="mt-1.5 text-sm text-er">{{ $message }}</p>@enderror
-            @if($edit && $license->hasSecret())<label class="mt-2 flex items-center gap-2 text-sm text-ink2"><input type="checkbox" name="clear_secret" value="1" class="size-4 accent-[var(--ac)]"> Gespeicherte Schlüssel entfernen</label>@endif
+        @php
+            $keyRows = old('keys') !== null
+                ? collect(old('keys'))->map(fn ($k) => ['id' => $k['id'] ?? '', 'label' => $k['label'] ?? '', 'saved' => filled($k['id'] ?? null), 'remove' => ! empty($k['remove'])])->values()
+                : $license->keys->map(fn ($k) => ['id' => $k->id, 'label' => $k->label ?? '', 'saved' => true, 'remove' => false])->values();
+        @endphp
+        <div class="sm:col-span-2" x-data="{ rows: @js($keyRows), add() { this.rows.push({ id: '', label: '', saved: false, remove: false }) } }">
+            <span class="mb-1.5 block text-sm font-medium">Lizenzschlüssel / -nummern <span class="font-normal text-ink3">(optional, verschlüsselt – z. B. je Modul oder Funktionsumfang)</span></span>
+            <div class="space-y-3">
+                <template x-for="(row, i) in rows" :key="i">
+                    <div class="rounded-xl border border-line p-3" :class="row.remove && 'opacity-50'">
+                        <input type="hidden" :name="`keys[${i}][id]`" :value="row.id">
+                        <div class="grid gap-2 sm:grid-cols-[1fr_2fr]">
+                            <input :name="`keys[${i}][label]`" x-model="row.label" maxlength="100" class="field" placeholder="Bezeichnung, z. B. Pro-Modul" aria-label="Bezeichnung des Schlüssels">
+                            <input :name="`keys[${i}][secret]`" maxlength="5000" autocomplete="off" spellcheck="false" class="field font-mono" :placeholder="row.saved ? '•••••••••••• (leer = unverändert)' : 'XXXX-XXXX-XXXX-XXXX'" aria-label="Lizenzschlüssel">
+                        </div>
+                        <label class="mt-2 flex items-center gap-2 text-sm text-ink2"><input type="checkbox" :name="`keys[${i}][remove]`" value="1" x-model="row.remove" class="size-4 accent-[var(--ac)]"> <span x-text="row.saved ? 'Diesen Schlüssel entfernen' : 'Diese Zeile verwerfen'"></span></label>
+                    </div>
+                </template>
+            </div>
+            <button type="button" class="btn btn-ghost mt-3 !py-2" @click="add()">+ Weiteren Schlüssel hinzufügen</button>
+            @error('keys.*')<p class="mt-1.5 text-sm text-er">{{ $message }}</p>@enderror
         </div>
 
         <div class="sm:col-span-2 border-t border-line pt-4">
