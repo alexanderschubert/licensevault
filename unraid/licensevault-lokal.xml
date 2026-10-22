@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
-<!-- Dieses Template nutzt ein lokal gebautes Image: im Projektordner "docker build" mit Ziel aio und Name licensevault:0.6.1 ausfuehren (siehe docs/UNRAID-TEMPLATE.md). -->
+<!-- Dieses Template nutzt ein lokal gebautes Image: im Projektordner "docker build" mit Ziel aio und Name licensevault:0.6.2 ausfuehren (siehe docs/UNRAID-TEMPLATE.md). -->
 <Container version="2">
   <Name>LicenseVault</Name>
-  <Repository>licensevault:0.6.1</Repository>
+  <Repository>licensevault:0.6.2</Repository>
   <Registry></Registry>
   <Network>bridge</Network>
   <MyIP/>

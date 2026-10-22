@@ -57,9 +57,9 @@
 
     <div class="space-y-5">
     <div class="card h-fit p-6" x-data="secretBox('{{ route('licenses.reveal', $license) }}')">
-        <div class="mb-3 flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-ink3"><x-icon name="lock" class="size-4" /> Lizenzschlüssel · verschlüsselt</div>
+        <div class="mb-3 flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-ink3"><x-icon name="lock" class="size-4" /> Lizenzschlüssel / -nummern · verschlüsselt</div>
         @if($license->hasSecret())
-            <code class="block break-all rounded-xl bg-panel2 px-3.5 py-3 font-mono text-sm" x-text="value ?? '••••••••••••••••'"></code>
+            <code class="block whitespace-pre-wrap break-all rounded-xl bg-panel2 px-3.5 py-3 font-mono text-sm" x-text="value ?? '••••••••••••••••'"></code>
             <p x-show="error" x-cloak x-text="error" class="mt-2 text-sm text-er"></p>
             <div class="mt-3 flex gap-2">
                 <button type="button" class="btn btn-ghost !py-2" @click="value ? hide() : show()"><x-icon name="eye" /><span x-text="value ? 'Verbergen' : 'Anzeigen (30 s)'"></span></button>

@@ -67,7 +67,7 @@ Starte einen zweiten Stack (eigener `DATA_DIR`, eigene Datenbank, anderer `WEB_P
 Ein Git-Tag `vX.Y.Z` löst `.github/workflows/release.yml` aus und veröffentlicht `ghcr.io/<owner>/licensevault-app` und `…-web` (UID 99 / GID 100 für Unraid). Nutzung:
 
 ```bash
-LV_VERSION=0.6.1 docker compose -f compose.yaml -f compose.release.yaml up -d
+LV_VERSION=0.6.2 docker compose -f compose.yaml -f compose.release.yaml up -d
 ```
 
 ## Hinweis zu PostgreSQL-Versionen

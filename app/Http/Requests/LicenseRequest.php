@@ -23,7 +23,7 @@ class LicenseRequest extends FormRequest
             'vendor' => ['nullable', 'string', 'max:150'],
             'product_version' => ['nullable', 'string', 'max:50'],
             'license_type' => ['required', Rule::enum(LicenseType::class)],
-            'secret' => ['nullable', 'string', 'max:2000'],
+            'secret' => ['nullable', 'string', 'max:5000'],
             'clear_secret' => ['nullable', 'boolean'],
             'account_login' => ['nullable', 'string', 'max:190'],
             'account_password' => ['nullable', 'string', 'max:500'],

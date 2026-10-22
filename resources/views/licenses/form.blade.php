@@ -48,10 +48,10 @@
         <x-field name="device_limit" label="Gerätelimit" type="number" :value="$license->device_limit" min="1" />
 
         <div class="sm:col-span-2">
-            <label for="secret" class="mb-1.5 block text-sm font-medium">Lizenzschlüssel <span class="font-normal text-ink3">(optional)</span> @if($edit && $license->hasSecret())<span class="font-normal text-ink3">(leer lassen = unverändert)</span>@endif</label>
-            <input id="secret" name="secret" type="text" autocomplete="off" spellcheck="false" class="field font-mono" placeholder="{{ $edit && $license->hasSecret() ? '••••••••••••' : 'XXXX-XXXX-XXXX-XXXX' }}">
+            <label for="secret" class="mb-1.5 block text-sm font-medium">Lizenzschlüssel / -nummern <span class="font-normal text-ink3">(optional, mehrere: eine pro Zeile){{ $edit && $license->hasSecret() ? ' – leer lassen = unverändert' : '' }}</span></label>
+            <textarea id="secret" name="secret" rows="2" maxlength="5000" autocomplete="off" spellcheck="false" class="field font-mono" placeholder="{{ $edit && $license->hasSecret() ? '••••••••••••' : 'XXXX-XXXX-XXXX-XXXX' }}"></textarea>
             @error('secret')<p class="mt-1.5 text-sm text-er">{{ $message }}</p>@enderror
-            @if($edit && $license->hasSecret())<label class="mt-2 flex items-center gap-2 text-sm text-ink2"><input type="checkbox" name="clear_secret" value="1" class="size-4 accent-[var(--ac)]"> Gespeicherten Schlüssel entfernen</label>@endif
+            @if($edit && $license->hasSecret())<label class="mt-2 flex items-center gap-2 text-sm text-ink2"><input type="checkbox" name="clear_secret" value="1" class="size-4 accent-[var(--ac)]"> Gespeicherte Schlüssel entfernen</label>@endif
         </div>
 
         <div class="sm:col-span-2 border-t border-line pt-4">

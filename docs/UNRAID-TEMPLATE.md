@@ -8,7 +8,7 @@ Das **All-in-One-Image** (`--target aio`) bringt alles in einem Container mit: W
 
 ```bash
 cd /mnt/user/appdata/licensevault
-docker build --target aio -t licensevault:0.6.1 .
+docker build --target aio -t licensevault:0.6.2 .
 ```
 
 (Das Image läuft als `nobody:users` = UID 99 / GID 100, passend zu Unraid.)

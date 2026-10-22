@@ -57,6 +57,16 @@ class LicenseTest extends TestCase
             ->assertHeader('Cache-Control', 'max-age=0, no-store, private');
     }
 
+    public function test_multiple_license_numbers_are_stored_encrypted_and_revealed_together(): void
+    {
+        $u = User::factory()->create();
+        $this->actingAs($u)->post('/lizenzen', $this->payload(['secret' => "AAAA-1111\nBBBB-2222\nCCCC-3333"]))->assertRedirect();
+        $l = License::firstOrFail();
+        $this->assertStringNotContainsString('BBBB-2222', DB::table('licenses')->where('id', $l->id)->value('secret_ciphertext'));
+        $this->actingAs($u)->get("/lizenzen/{$l->id}")->assertOk()->assertDontSee('BBBB-2222');
+        $this->actingAs($u)->post("/lizenzen/{$l->id}/schluessel")->assertOk()->assertJson(['secret' => "AAAA-1111\nBBBB-2222\nCCCC-3333"]);
+    }
+
     public function test_update_keeps_secret_when_blank_and_can_clear(): void
     {
         $u = User::factory()->create();
